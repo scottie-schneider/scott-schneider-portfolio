@@ -7,14 +7,14 @@ const db = url => {
   let config = {};
   if (true) {
     config = {
-      apiKey: process.env.FIREBASE_API_KEY_T,
-      authDomain: process.env.FIREBASE_AUTH_DOMAIN_T,
-      databaseURL: process.env.FIREBASE_DATABASE_URL_T,
-      projectId: process.env.FIREBASE_PROJECT_ID_T,
-      storageBucket: process.env.FIREBASE_STORAGE_BUCKET_T,
-      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID_T,
-      appId: process.env.FIREBASE_APP_ID_T,
-      measurementId: process.env.FIREBASE_MEASUREMENT_ID_T
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      databaseURL: process.env.FIREBASE_DATABASE_URL,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+      appId: process.env.FIREBASE_APP_ID,
+      measurementId: process.env.FIREBASE_MEASUREMENT_ID
     };
   }
   try {

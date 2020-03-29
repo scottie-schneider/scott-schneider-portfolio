@@ -6,31 +6,41 @@ import withAuth from "../components/withAuth";
 import absoluteUrl from "next-absolute-url";
 import db from "../lib/db";
 import router from "next/router";
+
+import Link from "next/link";
+
+const PostLink = props => (
+  <li>
+    <Link href="/blog/[title]" as={`/blog/${props.title}`}>
+      <a>{props.title}</a>
+    </Link>
+  </li>
+);
+
 const Home = ({ messages }) => {
   const { firestore, auth } = useContext(FirebaseContext);
-  const [leadMessages, setLeadMessages] = useState(messages);
+  const [blogs, setBlogs] = useState(messages);
   const logout = () => {
     auth.signOut().then(() => router.push("/signin"));
   };
-  const fetchMessages = async () => {
-    const messages = [];
+  const fetchBlogs = async () => {
+    const blogPosts = [];
     try {
       await firestore
-        .collection("messages")
-        .where("userId", "==", 1)
-        .where("leadId", "==", 1)
+        .collection("fl_content")
+        .where("_fl_meta_.schema", "==", "blogPost")
         .get()
         .then(documentSet => {
           if (documentSet !== null) {
             documentSet.forEach(doc => {
-              messages.push({
+              blogPosts.push({
                 id: doc.id,
                 ...doc.data()
               });
             });
-            setLeadMessages(messages);
+            setBlogs(blogPosts);
           }
-          return messages;
+          return blogPosts;
         });
     } catch (err) {
       console.log("allen we had an error");
@@ -38,48 +48,23 @@ const Home = ({ messages }) => {
     }
   };
   useEffect(() => {
-    console.log("hi");
-    fetchMessages();
+    fetchBlogs();
     const unsubscribe = firestore
-      .collection("messages")
-      .onSnapshot(fetchMessages);
+      .collection("fl_content")
+      .onSnapshot(fetchBlogs);
     // handles the cleanup
     return () => {
       unsubscribe();
     };
   }, []);
+
   return (
     <App>
       <p>Next.js Index Page</p>
       <button onClick={logout}>Logout</button>
-      {leadMessages.map(message => (
-        <p>{message.message}</p>
-      ))}
+      {blogs && blogs.map(b => <PostLink title={b.title} />)}
     </App>
   );
 };
-Home.getInitialProps = async ({ req }) => {
-  const absolute = absoluteUrl(req);
-  let messages = [];
-  const firebase = db(absolute.host);
 
-  await firebase
-    .firestore()
-    .collection("messages")
-    .where("userId", "==", 1)
-    .where("leadId", "==", 1)
-    .get()
-    .then(documentSet => {
-      if (documentSet !== null) {
-        documentSet.forEach(doc => {
-          messages.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-      }
-    });
-  return { messages };
-};
-
-export default withAuth(Home);
+export default Home;
