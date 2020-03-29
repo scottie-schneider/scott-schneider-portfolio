@@ -1,39 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
+import fetch from "isomorphic-unfetch";
 import { FirebaseContext } from "../_app";
 import { useRouter } from "next/router";
 import db from "../../lib/db";
 
-const Post = ({ post }) => {
-  const router = useRouter();
-  const { firestore } = useContext(FirebaseContext);
-  return (
-    <div>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </div>
-  );
+const Post = ({ data }) => {
+  return <div>{data.title}</div>;
 };
 Post.getInitialProps = async ({ query }) => {
-  const firebase = db(true);
-  const blogPost = [];
-  try {
-    await firebase
-      .firestore()
-      .collection("fl_content")
-      .where("_fl_meta_.schema", "==", "blogPost")
-      .where("slug", "==", query.slug)
-      .limit(1)
-      .get()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          return { post: "empty" };
-        }
-        blogPost.push(snapshot.docs[0].data());
-      });
-  } catch (e) {
-    return { post: e.message };
-  }
-  return { post: blogPost[0] };
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+  const data = await res.json();
+  return { data };
 };
 
 export default Post;

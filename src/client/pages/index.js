@@ -38,7 +38,6 @@ const Home = ({ messages }) => {
                 ...doc.data()
               });
             });
-            console.log(documentSet);
             setBlogs(blogPosts);
           }
           return blogPosts;
