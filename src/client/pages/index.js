@@ -11,7 +11,7 @@ import Link from "next/link";
 
 const PostLink = props => (
   <li>
-    <Link href="/blog/[title]" as={`/blog/${props.title}`}>
+    <Link href="/blog/[slug]" as={`/blog/${props.slug}`}>
       <a>{props.title}</a>
     </Link>
   </li>
@@ -38,6 +38,7 @@ const Home = ({ messages }) => {
                 ...doc.data()
               });
             });
+            console.log(documentSet);
             setBlogs(blogPosts);
           }
           return blogPosts;
@@ -62,7 +63,7 @@ const Home = ({ messages }) => {
     <App>
       <p>Next.js Index Page</p>
       <button onClick={logout}>Logout</button>
-      {blogs && blogs.map(b => <PostLink title={b.title} />)}
+      {blogs && blogs.map(b => <PostLink slug={b.slug} title={b.title} />)}
     </App>
   );
 };
