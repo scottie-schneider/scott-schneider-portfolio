@@ -19,6 +19,9 @@ const db = url => {
   }
   try {
     firebase.initializeApp(config);
+    // if ("http://localhost:5000") {
+    //   firebase.functions().useFunctionsEmulator("http://localhost:5000");
+    // }
   } catch (err) {
     // we skip the "already exists" message which is
     // not an actual error when we're hot-reloading
